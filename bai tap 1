@@ -1,0 +1,39 @@
+using System;
+
+public class Class1
+{
+ public Class1()
+ {
+  Console.WriteLine("Nhập số thứ nhất a: ");
+  double a = double.parse(Console.ReadLine());
+  Console.WriteLine("Nhập số thứ hai b: ");
+  double b = double.parse(Console.ReadLine());
+  Console.WriteLine("Nhập phép toán ");
+  char op = char.parse(Console.ReadLine());
+
+  double result = op switch
+  {
+   '1' => a + b,
+   '2' => a - b,
+   '3' => a * b,
+   '4' when b == 0 => throw new DivideByZeroException(),
+   '4' => a / b,
+   '5' when b == 0 => throw new DivideByZeroException(),
+   '5' => a % b,
+   => throw new InvalidOperrationException("Phép toán không hợp lệ!")
+  };
+  Console.WriteLine("Kết quả: {result:F2}");
+ }
+ catch (DivideByZeroException)
+  {
+   Console.WriteLine("Lỗi!Không thế chia cho 0!");
+  }
+ catch(FormatException)
+  {
+   Console.WriteLine("Lỗi! Dữ liệu nhập không hợp lê !");
+  }
+ catch(InvaliOperationException ex)
+ {
+  Console.WriteLine("Lỗi: ")
+ }
+}
