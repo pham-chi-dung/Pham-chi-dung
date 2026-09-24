@@ -1,91 +1,90 @@
 using System;
 using System.Windows.Forms;
 
-namespace Bai44
+namespace Bai43
 {
-    // Class đại diện cho Món ăn gồm Tên và Giá
-    public class FoodItem
-    {
-        public string Name { get; set; }
-        public int Price { get; set; }
-
-        public FoodItem(string name, int price)
-        {
-            Name = name;
-            Price = price;
-        }
-
-        // Ghi đè ToString để ListBox tự động hiển thị Tên và Giá
-        public override string ToString()
-        {
-            return $"{Name} - {Price:N0} VNĐ";
-        }
-    }
-
     public partial class Form1 : Form
     {
+        // Khai báo biến lưu kết quả và phép toán đang chọn
+        private double resultValue = 0;
+        private string operationPerformed = "";
+        private bool isOperationPerformed = false;
+
         public Form1()
         {
             InitializeComponent();
         }
 
-        // 1. Khởi tạo danh sách món ăn ban đầu
-        private void Form1_Load(object sender, EventArgs e)
+        // 1. GÁN CHUNG EVENT HANDLER CHO 10 NÚT BẤM SỐ (btn0 -> btn9)
+        private void NumberButton_Click(object sender, EventArgs e)
         {
-            lstMenu.Items.Add(new FoodItem("Hamburger", 50000));
-            lstMenu.Items.Add(new FoodItem("Pizza", 120000));
-            lstMenu.Items.Add(new FoodItem("Gà Rán", 35000));
-            lstMenu.Items.Add(new FoodItem("Pepsi", 15000));
+            // Kiểm tra nếu ô hiển thị đang là "0" hoặc vừa bấm phép toán xong thì xóa sạch để nhập số mới
+            if ((txtDisplay.Text == "0") || (isOperationPerformed))
+                txtDisplay.Clear();
 
-            UpdateTotal();
+            isOperationPerformed = false;
+
+            // Ép kiểu sender thành Button để lấy thuộc tính Text của nút vừa bấm
+            Button btn = (Button)sender;
+            txtDisplay.Text += btn.Text;
         }
 
-        // 2. Nút > : Thêm món từ lstMenu sang lstSelected
-        private void btnAdd_Click(object sender, EventArgs e)
+        // 2. GÁN CHUNG EVENT HANDLER CHO CÁC PHÉP TOÁN (+, -, *, /)
+        private void OperationButton_Click(object sender, EventArgs e)
         {
-            if (lstMenu.SelectedItem != null)
+            Button btn = (Button)sender;
+
+            if (resultValue != 0)
             {
-                FoodItem selectedItem = (FoodItem)lstMenu.SelectedItem;
-
-                // Thêm vào danh sách đã chọn
-                lstSelected.Items.Add(selectedItem);
-
-                // Cập nhật lại tổng tiền
-                UpdateTotal();
+                btnEquals.PerformClick(); // Tự động tính kết quả dồn nếu bấm liên tiếp
+                operationPerformed = btn.Text;
+                isOperationPerformed = true;
             }
             else
             {
-                MessageBox.Show("Vui lòng chọn món ăn từ thực đơn!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                operationPerformed = btn.Text;
+                resultValue = double.Parse(txtDisplay.Text);
+                isOperationPerformed = true;
             }
         }
 
-        // 3. Nút < : Xóa món đang chọn khỏi lstSelected
-        private void btnRemove_Click(object sender, EventArgs e)
+        // 3. XỬ LÝ NÚT XÓA (C)
+        private void btnClear_Click(object sender, EventArgs e)
         {
-            if (lstSelected.SelectedItem != null)
-            {
-                // Xóa món được chọn khỏi lstSelected
-                lstSelected.Items.Remove(lstSelected.SelectedItem);
-
-                // Cập nhật lại tổng tiền
-                UpdateTotal();
-            }
-            else
-            {
-                MessageBox.Show("Vui lòng chọn món cần xóa trong danh sách đã chọn!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            txtDisplay.Text = "0";
+            resultValue = 0;
+            operationPerformed = "";
         }
 
-        // 4. Hàm tự động tính toán tổng tiền các món trong lstSelected
-        private void UpdateTotal()
+        // 4. XỬ LÝ NÚT BẰNG (=)
+        private void btnEquals_Click(object sender, EventArgs e)
         {
-            int total = 0;
-            foreach (FoodItem item in lstSelected.Items)
+            double secondNum;
+            if (!double.TryParse(txtDisplay.Text, out secondNum)) return;
+
+            switch (operationPerformed)
             {
-                total += item.Price;
+                case "+":
+                    txtDisplay.Text = (resultValue + secondNum).ToString();
+                    break;
+                case "-":
+                    txtDisplay.Text = (resultValue - secondNum).ToString();
+                    break;
+                case "*":
+                    txtDisplay.Text = (resultValue * secondNum).ToString();
+                    break;
+                case "/":
+                    if (secondNum != 0)
+                        txtDisplay.Text = (resultValue / secondNum).ToString();
+                    else
+                        txtDisplay.Text = "Lỗi chia 0";
+                    break;
+                default:
+                    break;
             }
 
-            lblTotal.Text = $"Tổng tiền: {total:N0} VNĐ";
+            double.TryParse(txtDisplay.Text, out resultValue);
+            operationPerformed = "";
         }
     }
 }
