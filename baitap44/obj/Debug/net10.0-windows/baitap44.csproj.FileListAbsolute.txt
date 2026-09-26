@@ -1,0 +1,17 @@
+C:\Users\Admin\source\repos\baitap44\baitap44\bin\Debug\net10.0-windows\baitap44.exe
+C:\Users\Admin\source\repos\baitap44\baitap44\bin\Debug\net10.0-windows\baitap44.deps.json
+C:\Users\Admin\source\repos\baitap44\baitap44\bin\Debug\net10.0-windows\baitap44.runtimeconfig.json
+C:\Users\Admin\source\repos\baitap44\baitap44\bin\Debug\net10.0-windows\baitap44.dll
+C:\Users\Admin\source\repos\baitap44\baitap44\bin\Debug\net10.0-windows\baitap44.pdb
+C:\Users\Admin\source\repos\baitap44\baitap44\obj\Debug\net10.0-windows\baitap44.Form1.resources
+C:\Users\Admin\source\repos\baitap44\baitap44\obj\Debug\net10.0-windows\baitap44.csproj.GenerateResource.cache
+C:\Users\Admin\source\repos\baitap44\baitap44\obj\Debug\net10.0-windows\baitap44.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\source\repos\baitap44\baitap44\obj\Debug\net10.0-windows\baitap44.AssemblyInfoInputs.cache
+C:\Users\Admin\source\repos\baitap44\baitap44\obj\Debug\net10.0-windows\baitap44.AssemblyInfo.cs
+C:\Users\Admin\source\repos\baitap44\baitap44\obj\Debug\net10.0-windows\baitap44.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\baitap44\baitap44\obj\Debug\net10.0-windows\baitap44.dll
+C:\Users\Admin\source\repos\baitap44\baitap44\obj\Debug\net10.0-windows\refint\baitap44.dll
+C:\Users\Admin\source\repos\baitap44\baitap44\obj\Debug\net10.0-windows\baitap44.pdb
+C:\Users\Admin\source\repos\baitap44\baitap44\obj\Debug\net10.0-windows\baitap44.genruntimeconfig.cache
+C:\Users\Admin\source\repos\baitap44\baitap44\obj\Debug\net10.0-windows\ref\baitap44.dll
+C:\Users\Admin\source\repos\baitap44\baitap44\obj\Debug\net10.0-windows\baitap44.csproj.Up2Date
