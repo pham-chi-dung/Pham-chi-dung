@@ -1,54 +1,89 @@
 using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace baitap42
 {
-    public partial class Form1 : Form
+    public partial class Form2 : Form
     {
-        public Form1()
+        private string connectionString = @"Server=ADMIN-PC;Database=QLHocVien;Integrated Security=True;";
+
+        public Form2()
         {
             InitializeComponent();
+            LoadCourses();
         }
 
-        private void btnSubmit_Click(object sender, EventArgs e)
+        // Nạp danh sách Khóa học vào ComboBox (DisplayMember, ValueMember)
+        private void LoadCourses()
         {
-            // 1. Xóa tất cả các thông báo lỗi cũ của lần bấm trước
-            errorProvider1.Clear();
-
-            // 2. Kiểm tra dữ liệu: Nếu TextBox trống hoặc chỉ chứa dấu cách
-            if (string.IsNullOrWhiteSpace(txtName.Text))
+            List<CourseItem> courses = new List<CourseItem>
             {
-                // Gọi SetError: Gắn lỗi vào đúng ô txtName kèm thông báo cụ thể
-                errorProvider1.SetError(txtName, "Vui lòng nhập họ và tên! Không được để trống.");
+                new CourseItem { Id = "C01", Name = "Lập trình C# WinForms" },
+                new CourseItem { Id = "C02", Name = "Lập trình Web ASP.NET Core" },
+                new CourseItem { Id = "C03", Name = "Quản trị CSDL SQL Server" },
+                new CourseItem { Id = "C04", Name = "Phân tích dữ liệu Python" }
+            };
 
-                // Đặt con trỏ chuột quay lại ô txtName để người dùng nhập ngay
-                txtName.Focus();
-            }
-            else
-            {
-                // Nếu đã nhập hợp lệ, hiển thị thông báo thành công
-                MessageBox.Show("Xác nhận thành công! Xin chào: " + txtName.Text,
-                                "Thông báo",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Information);
-            }
+            cboCourse.DataSource = courses;
+            cboCourse.DisplayMember = "Name"; // Tên hiển thị
+            cboCourse.ValueMember = "Id";     // Giá trị bên dưới
         }
 
-        private void btnSubmit_Click_1(object sender, EventArgs e)
+        // NÂNG CẤP: Nút "Đăng ký" tổng hợp dữ liệu và LƯU VÀO CSDL
+        private void btnRegister_Click(object sender, EventArgs e)
         {
-            // Xóa lỗi cũ
-            errorProvider1.Clear();
+            // Lấy thông tin từ các Input Controls
+            string phone = mtxtPhone.Text;
+            DateTime birthDate = dtpBirthDate.Value;
+            string courseName = cboCourse.Text;
 
-            // Kiểm tra textbox (nhớ đảm bảo textbox của bạn đã được đổi tên thành txtName)
-            if (string.IsNullOrWhiteSpace(txtName.Text))
+            // Kiểm tra sơ bộ số điện thoại có bị để trống
+            if (!mtxtPhone.MaskCompleted)
             {
-                errorProvider1.SetError(txtName, "Vui lòng nhập họ và tên! Không được để trống.");
-                txtName.Focus();
+                MessageBox.Show("Vui lòng nhập đầy đủ số điện thoại!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
-            else
+
+            // NÂNG CẤP: Lưu vào bảng Students trong SQL Server
+            try
             {
-                MessageBox.Show("Xác nhận thành công! Xin chào: " + txtName.Text, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = "INSERT INTO Students (Phone, BirthDate, Course) VALUES (@phone, @dob, @course)";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    cmd.Parameters.AddWithValue("@phone", phone);
+                    cmd.Parameters.AddWithValue("@dob", birthDate.Date);
+                    cmd.Parameters.AddWithValue("@course", courseName);
+
+                    conn.Open();
+                    int rows = cmd.ExecuteNonQuery();
+
+                    if (rows > 0)
+                    {
+                        // In thông báo thành công
+                        string info = $"ĐĂNG KÝ THÀNH CÔNG VÀ ĐÃ LƯU CSDL!\n\n" +
+                                     $"- SĐT: {phone}\n" +
+                                     $"- Ngày sinh: {birthDate:dd/MM/yyyy}\n" +
+                                     $"- Khóa học: {courseName}";
+
+                        MessageBox.Show(info, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi lưu CSDL: " + ex.Message, "Thông báo lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+    }
+
+    // Class trợ giúp đổ dữ liệu cho ComboBox
+    public class CourseItem
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
     }
 }
